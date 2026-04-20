@@ -3,8 +3,6 @@ package com.jb.fop.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.List;
-
 @Data
 @Entity
 public class UserDetails {
@@ -18,6 +16,6 @@ public class UserDetails {
     private String password;
     private String accountStatus;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "user")
-    private List<StudentInquiry> studentInquiry;
+//    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "user")
+//    private List<StudentInquiry> studentInquiry;
 }

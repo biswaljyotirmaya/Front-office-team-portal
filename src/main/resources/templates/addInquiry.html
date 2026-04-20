@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Inquiry | NareshIT</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        .auth-card {
+            border-radius: 10px;
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body class="bg-light">
+
+<div class="d-flex justify-content-center align-items-center vh-100">
+    <div class="auth-card d-flex shadow" style="width:900px">
+
+        <!-- LEFT FORM -->
+        <div class="p-5 bg-white w-50">
+            <h3>NareshIT</h3>
+            <p>Add Student Enquiry</p>
+
+            <form action="/inquiry" method="post">
+
+                <input type="text" name="studentName" class="form-control mb-3" placeholder="Student Name" required>
+
+                <input type="text" name="contactNumber" class="form-control mb-3" placeholder="Contact Number" required>
+
+                <label class="form-label">Class Mode</label>
+                <select name="classMode" class="form-select mb-3" required>
+                    <option value="">-Select-</option>
+                    <option>Online</option>
+                    <option>Offline</option>
+                </select>
+
+                <label class="form-label">Course</label>
+                <select name="course" class="form-select mb-3" required>
+                    <option>Java Fullstack</option>
+                    <option>Python Fullstack</option>
+                    <option>DevOps</option>
+                </select>
+
+                <label class="form-label">Enquiry Status</label>
+                <select name="enquiryStatus" class="form-select mb-3" required>
+                    <option>New</option>
+                    <option>In Progress</option>
+                    <option>Enrolled</option>
+                    <option>Closed</option>
+                </select>
+
+                <button class="btn btn-danger w-100">Add Inquiry</button>
+            </form>
+
+            <p class="text-center mt-3">
+                <a href="/" class="btn btn-outline-secondary btn-sm">Back to Home</a>
+            </p>
+        </div>
+
+        <!-- RIGHT PANEL -->
+        <div class="text-white d-flex align-items-center justify-content-center w-50"
+             style="background: linear-gradient(135deg,#ff6a00,#ee0979)">
+            <div class="text-center p-4">
+                <h4>Manage Student Enquiries</h4>
+                <p>Track, update and manage all student inquiries efficiently.</p>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

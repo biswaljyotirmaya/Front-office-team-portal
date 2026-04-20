@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Manage Inquiries</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+
+    <style>
+        body {
+            background: #f5f6fa;
+        }
+
+        .navbar {
+            background: linear-gradient(90deg, #ff6a00, #ee0979);
+        }
+
+        .card {
+            border: none;
+            border-radius: 12px;
+        }
+
+        .table thead {
+            background: linear-gradient(90deg, #ff6a00, #ee0979);
+            color: white;
+        }
+
+        .btn-gradient {
+            background: linear-gradient(90deg, #ff6a00, #ee0979);
+            color: white;
+            border: none;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #777;
+        }
+
+        .empty-state i {
+            font-size: 60px;
+            color: #ccc;
+            margin-bottom: 15px;
+        }
+
+        .badge-status {
+            padding: 6px 10px;
+            border-radius: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark shadow-sm"
+     style="background: linear-gradient(90deg,#ff6a00,#ee0979)">
+
+    <div class="container">
+
+        <a class="navbar-brand d-flex align-items-center" href="/">
+            <img src="/images/naresh-it-logo.png" height="40" class="me-2">
+        </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navBar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse justify-content-end" id="navBar">
+
+            <div class="d-flex align-items-center gap-2">
+
+                <a href="/dashboard" class="btn btn-light btn-sm">
+                    <i class="bi bi-speedometer2"></i> Dashboard
+                </a>
+
+                <a href="/" class="btn btn-outline-light btn-sm">
+                    <i class="bi bi-box-arrow-right"></i> Logout
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+</nav>
+
+<div class="container mt-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h3 class="mb-0">All Inquiries</h3>
+            <small class="text-muted">Manage student inquiries efficiently</small>
+        </div>
+
+        <a href="/inquiry" class="btn btn-gradient">
+            <i class="bi bi-plus-lg"></i> Add Inquiry
+        </a>
+    </div>
+
+    <div th:if="${#lists.isEmpty(inquiries)}" class="empty-state">
+        <i class="bi bi-clipboard-x"></i>
+        <h4>No inquiries found</h4>
+        <p>Start by adding your first inquiry</p>
+
+        <a href="/inquiry" class="btn btn-gradient mt-3">
+            + Add Inquiry
+        </a>
+    </div>
+
+    <div th:if="${!#lists.isEmpty(inquiries)}" class="card shadow">
+        <div class="card-body">
+
+            <table class="table table-hover align-middle text-center">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Contact</th>
+                    <th>Course</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="inq : ${inquiries}">
+                    <td th:text="${inq.id}"></td>
+                    <td class="fw-semibold" th:text="${inq.studentName}"></td>
+                    <td th:text="${inq.contactNumber}"></td>
+                    <td th:text="${inq.course}"></td>
+
+                    <!-- 🔥 Status Badge -->
+                    <td>
+                        <span th:text="${inq.enquiryStatus}"
+                              th:classappend="
+                                ${inq.enquiryStatus=='Enrolled'} ? 'badge bg-success' :
+                                (${inq.enquiryStatus=='New'} ? 'badge bg-secondary' :
+                                (${inq.enquiryStatus=='In Progress'} ? 'badge bg-warning text-dark' :
+                                'badge bg-danger'))">
+                        </span>
+                    </td>
+
+                    <td>
+                        <a th:href="@{/edit(id=${inq.id})}"
+                           class="btn btn-warning btn-sm me-1">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+
+                        <a th:href="@{/delete(id=${inq.id})}"
+                           class="btn btn-danger btn-sm"
+                           onclick="return confirm('Delete this inquiry?')">
+                            <i class="bi bi-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+
+            </table>
+
+        </div>
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

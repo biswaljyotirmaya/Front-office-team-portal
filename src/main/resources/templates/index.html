@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Front Office Portal</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+
+    <!-- Custom Styling -->
+    <style>
+        .carousel img {
+            height: 400px;
+            object-fit: cover;
+        }
+
+        .course-card img {
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        footer {
+            background-color: #f8f9fa;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- 🔹 Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center" href="/">
+            <img src="/images/naresh-it-logo.png" height="40" class="me-2">
+        </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navBar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navBar">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link active" href="/">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="/inquiry">New Inquiry</a></li>
+                <li class="nav-item"><a class="nav-link" href="/inquiries">View Inquiries</a></li>
+            </ul>
+            <a href="login" class="btn btn-primary ms-3">Login</a>
+        </div>
+    </div>
+</nav>
+
+<!-- 🔹 Carousel -->
+<div id="carouselExample" class="carousel slide">
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <img src="/images/carousel-1.jpg" class="d-block w-100">
+        </div>
+        <div class="carousel-item">
+            <img src="/images/carousel-2.jpg" class="d-block w-100">
+        </div>
+        <div class="carousel-item">
+            <img src="/images/carousel-3.jpg" class="d-block w-100">
+        </div>
+    </div>
+
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon"></span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+        <span class="carousel-control-next-icon"></span>
+    </button>
+</div>
+
+<!-- 🔹 Courses Section -->
+<section class="container my-5">
+    <h2 class="text-center mb-4">Our Courses</h2>
+
+    <div class="row g-4">
+        <div class="col-md-4 course-card">
+            <img src="/images/course-1.jpg" class="w-100">
+        </div>
+        <div class="col-md-4 course-card">
+            <img src="/images/course-2.jpg" class="w-100">
+        </div>
+        <div class="col-md-4 course-card">
+            <img src="/images/course-3.jpg" class="w-100">
+        </div>
+        <div class="col-md-4 course-card">
+            <img src="/images/course-4.jpg" class="w-100">
+        </div>
+        <div class="col-md-4 course-card">
+            <img src="/images/course-5.jpg" class="w-100">
+        </div>
+        <div class="col-md-4 course-card">
+            <img src="/images/course-6.jpg" class="w-100">
+        </div>
+    </div>
+</section>
+
+<!-- 🔹 Footer -->
+<footer class="text-center py-3 border-top">
+    <p class="mb-0">© 2026 Naresh IT | All Rights Reserved</p>
+</footer>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
