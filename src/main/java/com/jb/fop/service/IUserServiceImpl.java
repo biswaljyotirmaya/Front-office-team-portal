@@ -61,8 +61,29 @@ public class IUserServiceImpl implements IUserService {
     }
 
     @Override
-    public boolean unLockAccount(UnlockForm unlockForm) {
-        return false;
+    public String unLockAccount(UnlockForm unlockForm) {
+        try{
+            System.out.println("unlockForm at service= " + unlockForm);
+            UserDetails userDetails = userDetailsRepo.findByEmail(unlockForm.getEmail());
+            if (userDetails == null) {
+                return "Email Doesn't Exists";
+            }
+            if(!unlockForm.getNewPassword().equals(unlockForm.getConfirmPassword())) {
+                return "Password Doesn't Match";
+            }
+            if(!unlockForm.getTemporaryPassword().equals(userDetails.getPassword())){
+                return "Please check your temporary password again from your email";
+            }
+            if(userDetails.getPassword().equals(unlockForm.getNewPassword())) {
+                userDetails.setPassword(unlockForm.getNewPassword());
+                userDetails.setAccountStatus("UNLOCKED");
+                userDetailsRepo.save(userDetails);
+            }
+            return "SUCCESS";
+        }catch (Exception e){
+            e.printStackTrace();
+            return "Something went wrong while processing your request";
+        }
     }
 
     @Override

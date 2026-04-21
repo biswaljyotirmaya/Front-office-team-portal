@@ -9,7 +9,7 @@ public interface IUserService {
 
     public String SignUp(SignUpForm signUpForm);
 
-    public boolean unLockAccount(UnlockForm unlockForm);
+    public String unLockAccount(UnlockForm unlockForm);
 
     public String forgotPassword(String email);
 }

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,35 +13,37 @@
 <div class="auth-container d-flex justify-content-center align-items-center vh-100">
     <div class="auth-card d-flex shadow" style="width:900px">
 
-        <!-- 🔹 LEFT -->
         <div class="left p-5 bg-white w-50">
 
             <h3>NareshIT</h3>
             <p>Unlock your account</p>
 
-            <!-- Email -->
             <p>
                 Your Email :
                 <strong th:text="${email}">user@email.com</strong>
             </p>
+            <p th:if="${unlockUser!=null}" th:text="${success}" class="text-success"></p>
+            <p th:if="${unlockUser!=null}" th:text="${error}" class="text-danger"></p>
 
-            <form action="/unlock" method="post">
+            <form th:action="@{/unlock}" th:method="post" th:object="${unlockUser}">
 
                 <input type="hidden" name="email" th:value="${email}">
 
-                <input type="text" name="tempPassword"
+                <input type="text"
+                       th:field="*{temporaryPassword}"
+                       th:attr="value=${success} ? '' : *{temporaryPassword}"
                        class="form-control mb-3"
                        placeholder="Temporary Password" required>
 
-                <input type="password" name="newPassword"
+                <input type="password"
+                       th:field="*{newPassword}"
                        class="form-control mb-3"
                        placeholder="New Password" required>
 
-                <input type="password" name="confirmPassword"
+                <input type="password" th:field="*{confirmPassword}"
                        class="form-control mb-3"
                        placeholder="Confirm Password" required>
 
-                <!-- 🔥 SAME BUTTON STYLE AS REGISTER -->
                 <button class="btn btn-danger w-100">UNLOCK</button>
             </form>
 
