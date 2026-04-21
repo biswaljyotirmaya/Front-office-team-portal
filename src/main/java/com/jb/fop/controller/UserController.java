@@ -39,13 +39,14 @@ public class UserController {
 
     @PostMapping("/signup")
     public String handleSignup(@ModelAttribute("user") SignUpForm signUpForm, Model model) {
-        boolean status = iUserService.SignUp(signUpForm);
-        if (status) {
+        String status = iUserService.SignUp(signUpForm);
+        if ("SUCCESS".equals(status)) {
             model.addAttribute("success", "Signup Successful, please check your email");
+            model.addAttribute("user", signUpForm);
         } else {
-            model.addAttribute("error", "something went wrong, please try with different email address");
+            model.addAttribute("error", status);
+            model.addAttribute("user", signUpForm);
         }
-        model.addAttribute("user", signUpForm);
         return "signUp";
     }
 }
