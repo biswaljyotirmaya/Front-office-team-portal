@@ -73,4 +73,43 @@ public class EmailUtils {
                 + "</div>"
                 + "</div>";
     }
+
+    public String buildForgotPasswordEmail(String name, String pass) {
+
+        return "<div style='font-family:Arial,sans-serif;background:#f4f6f8;padding:30px;'>"
+                + "<div style='max-width:600px;margin:auto;background:#ffffff;padding:30px;border-radius:10px;"
+                + "box-shadow:0 4px 12px rgba(0,0,0,0.1);'>"
+
+                + "<h2 style='text-align:center;color:#333;margin-bottom:20px;'>Password Recovery 🔑</h2>"
+
+                + "<p style='font-size:15px;color:#333;'>Hi <b>" + name + "</b>,</p>"
+
+                + "<p style='font-size:14px;color:#555;line-height:1.6;'>"
+                + "As requested, here are your account login details."
+                + "</p>"
+
+                + "<div style='background:#fff3cd;padding:14px;border-radius:6px;font-weight:bold;"
+                + "color:#856404;text-align:center;margin:20px 0;font-size:15px;'>"
+                + "Your Password: " + pass
+                + "</div>"
+
+                + "<div style='text-align:center;margin:25px 0;'>"
+                + "<a href='http://localhost:8080/login' "
+                + "style='display:inline-block;background:#4CAF50;color:#ffffff;text-decoration:none;"
+                + "padding:12px 24px;border-radius:6px;font-weight:bold;font-size:14px;'>"
+                + "Login Now"
+                + "</a>"
+                + "</div>"
+
+                + "<p style='font-size:13px;color:#d9534f;'>"
+                + "⚠️ For security reasons, we strongly recommend changing your password after logging in."
+                + "</p>"
+
+                + "<p style='margin-top:20px;font-size:14px;color:#333;'>"
+                + "Thanks,<br><b>Support Team</b>"
+                + "</p>"
+
+                + "</div>"
+                + "</div>";
+    }
 }

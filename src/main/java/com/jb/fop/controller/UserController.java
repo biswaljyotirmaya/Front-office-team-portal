@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class UserController {
@@ -23,12 +24,15 @@ public class UserController {
         model.addAttribute("login", new LoginForm());
         return "login";
     }
+
     @PostMapping("/login")
-    public String handleLogin(@ModelAttribute("login") LoginForm loginForm, Model model ) {
-        String res=userService.Login(loginForm);
-        if(!"SUCCESS".equals(res.toUpperCase())){
-            model.addAttribute("error",res);
-        return "login";
+    public String handleLogin(@ModelAttribute("login") LoginForm loginForm, RedirectAttributes redirectAttributes) {
+        String res = userService.Login(loginForm);
+        if (!"SUCCESS".equals(res.toUpperCase())) {
+            redirectAttributes.addFlashAttribute("error", res);
+            return "redirect:/login";
+        }else{
+            redirectAttributes.addFlashAttribute("success", "Login Success, Welcome back!");
         }
         return "redirect:/dashboard";
     }
@@ -51,11 +55,11 @@ public class UserController {
         model.addAttribute("email", email);
         model.addAttribute("unlockForm", new UnlockForm());
         System.out.println("unlockForm = " + unlockForm);
-        String result =userService.unLockAccount(unlockForm);
-        if(result.equals("SUCCESS")){
-            model.addAttribute("success","Your account has been unlocked,\nPlease login with your new credentials");
-        }else{
-            model.addAttribute("error",result);
+        String result = userService.unLockAccount(unlockForm);
+        if (result.equals("SUCCESS")) {
+            model.addAttribute("success", "Your account has been unlocked,\nPlease login with your new credentials");
+        } else {
+            model.addAttribute("error", result);
         }
         return "unlock";
     }
@@ -72,8 +76,21 @@ public class UserController {
         }
         return "signUp";
     }
+
     @GetMapping("/forgotpass")
     public String forgotPassword() {
         return "forgotPassword";
+    }
+
+    @PostMapping("/forgotpass")
+    public String handleForgotPassword(@RequestParam("email") String email, RedirectAttributes redirectAttributes) {
+        String msg = userService.forgotPassword(email);
+        if (msg.startsWith("ERROR:")) {
+            redirectAttributes.addFlashAttribute("error", msg.substring(6));
+        } else {
+            redirectAttributes.addFlashAttribute("success", "Password sent successfully. Please check your email and log in.");
+            return "redirect:/login";
+        }
+        return "redirect:/forgotpass";
     }
 }

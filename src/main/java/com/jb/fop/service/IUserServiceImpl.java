@@ -31,7 +31,7 @@ public class IUserServiceImpl implements IUserService {
         if (loginForm.getPassword() == null || loginForm.getPassword().isBlank()) {
             return "Password is required";
         }
-        
+
         UserDetails userData = userDetailsRepo.findByEmail(loginForm.getEmail());
         if (userData == null) {
             return "Email is not exist, please login with valid email";
@@ -103,6 +103,21 @@ public class IUserServiceImpl implements IUserService {
 
     @Override
     public String forgotPassword(String email) {
-        return "";
+        if (email == null || email.isBlank()) {
+            return "ERROR: Email cannot be empty";
+        }
+        UserDetails userData = userDetailsRepo.findByEmail(email);
+        if (userData == null) {
+            return "ERROR: User doesn't exist with this email";
+        }
+        if ("LOCKED".equals(userData.getAccountStatus())) {
+            return "ERROR: Your account has been locked,\n please try to unlock your email";
+        }
+        String name = userData.getUserName();
+        String subject = "Forgot Password! Old Password request";
+        String body = emailUtils.buildForgotPasswordEmail(name, userData.getPassword());
+        emailUtils.sendEmail(email, subject, body);
+
+        return "SUCCESS";
     }
 }

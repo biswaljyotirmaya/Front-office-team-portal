@@ -51,11 +51,33 @@
             color: white;
             border: none;
         }
+        #alertBox {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-weight: bold;
+            z-index: 9999;
+        }
+        .alert-success {
+            background: #4CAF50;
+        }
+        .alert-error {
+            background: #f44336;
+        }
+    </style>
     </style>
 </head>
 
 <body>
-
+<div id="alertBox"
+     th:if="${success != null or error != null}"
+     th:text="${success != null ? success : error}"
+     th:classappend="${success != null} ? 'alert-success' : 'alert-error'">
+</div>
 <nav class="navbar navbar-expand-lg navbar-dark shadow-sm"
      style="background: linear-gradient(90deg,#ff6a00,#ee0979)">
 
@@ -157,6 +179,15 @@
     </div>
 
 </div>
-
+<script>
+    setTimeout(function () {
+        let alertBox = document.getElementById("alertBox");
+        if (alertBox) {
+            alertBox.style.transition = "opacity 0.5s";
+            alertBox.style.opacity = "0";
+            setTimeout(() => alertBox.remove(), 500);
+        }
+    }, 2500);
+</script>
 </body>
 </html>

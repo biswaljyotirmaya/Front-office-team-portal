@@ -49,19 +49,41 @@
             color: white;
             border: none;
         }
+
+        #alertBox {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-weight: bold;
+            z-index: 9999;
+        }
+        .alert-success {
+            background: #4CAF50;
+        }
+        .alert-error {
+            background: #f44336;
+        }
     </style>
 </head>
 
 <body>
 <div class="auth-container">
+    <div id="alertBox"
+         th:if="${success != null or error != null}"
+         th:text="${success != null ? success : error}"
+         th:classappend="${success != null} ? 'alert-success' : 'alert-error'">
+    </div>
     <div class="auth-card">
 
         <div class="left">
             <h3 class="mb-4">NareshIT</h3>
             <p>Please login to your account</p>
-            <p th:if="${login!=null}" th:text="${error}" class="text-danger"></p>
 
-            <form th:action="@{/login}" th:method="post" th:object="${login}" >
+            <form th:action="@{/login}" th:method="post" th:object="${login}">
                 <input type="text" th:field="*{email}" class="form-control mb-3" placeholder="Email">
                 <input type="password" th:field="*{password}" class="form-control mb-3" placeholder="Password">
                 <button class="btn btn-gradient w-100">LOGIN</button>
@@ -86,5 +108,15 @@
 
     </div>
 </div>
+<script>
+    setTimeout(function () {
+        let alertBox = document.getElementById("alertBox");
+        if (alertBox) {
+            alertBox.style.transition = "opacity 0.5s";
+            alertBox.style.opacity = "0";
+            setTimeout(() => alertBox.remove(), 500);
+        }
+    }, 2500);
+</script>
 </body>
 </html>
