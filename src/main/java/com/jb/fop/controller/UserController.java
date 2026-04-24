@@ -1,5 +1,6 @@
 package com.jb.fop.controller;
 
+import com.jb.fop.dto.LoginForm;
 import com.jb.fop.dto.SignUpForm;
 import com.jb.fop.dto.UnlockForm;
 import com.jb.fop.service.IUserService;
@@ -18,8 +19,18 @@ public class UserController {
     private IUserService userService;
 
     @GetMapping("login")
-    public String login() {
+    public String login(Model model) {
+        model.addAttribute("login", new LoginForm());
         return "login";
+    }
+    @PostMapping("/login")
+    public String handleLogin(@ModelAttribute("login") LoginForm loginForm, Model model ) {
+        String res=userService.Login(loginForm);
+        if(!"SUCCESS".equals(res.toUpperCase())){
+            model.addAttribute("error",res);
+        return "login";
+        }
+        return "redirect:/dashboard";
     }
 
     @GetMapping("/signup")
@@ -49,11 +60,6 @@ public class UserController {
         return "unlock";
     }
 
-    @GetMapping("/forgotpass")
-    public String forgotPassword() {
-        return "forgotPassword";
-    }
-
     @PostMapping("/signup")
     public String handleSignup(@ModelAttribute("user") SignUpForm signUpForm, Model model) {
         String status = userService.SignUp(signUpForm);
@@ -65,5 +71,9 @@ public class UserController {
             model.addAttribute("user", signUpForm);
         }
         return "signUp";
+    }
+    @GetMapping("/forgotpass")
+    public String forgotPassword() {
+        return "forgotPassword";
     }
 }

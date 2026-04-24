@@ -25,7 +25,24 @@ public class IUserServiceImpl implements IUserService {
 
     @Override
     public String Login(LoginForm loginForm) {
-        return "";
+        if (loginForm.getEmail() == null || loginForm.getEmail().isBlank()) {
+            return "Email is required";
+        }
+        if (loginForm.getPassword() == null || loginForm.getPassword().isBlank()) {
+            return "Password is required";
+        }
+        
+        UserDetails userData = userDetailsRepo.findByEmail(loginForm.getEmail());
+        if (userData == null) {
+            return "Email is not exist, please login with valid email";
+        }
+        if (!"UNLOCKED".equals(userData.getAccountStatus())) {
+            return "Account is not locked, please unlock your account before login";
+        }
+        if (!userData.getPassword().equals(loginForm.getPassword())) {
+            return "Invalid password, login with valid password only";
+        }
+        return "SUCCESS";
     }
 
     @Override
@@ -62,25 +79,23 @@ public class IUserServiceImpl implements IUserService {
 
     @Override
     public String unLockAccount(UnlockForm unlockForm) {
-        try{
+        try {
             System.out.println("unlockForm at service= " + unlockForm);
             UserDetails userDetails = userDetailsRepo.findByEmail(unlockForm.getEmail());
             if (userDetails == null) {
                 return "Email Doesn't Exists";
             }
-            if(!unlockForm.getNewPassword().equals(unlockForm.getConfirmPassword())) {
+            if (!unlockForm.getNewPassword().equals(unlockForm.getConfirmPassword())) {
                 return "Password Doesn't Match";
             }
-            if(!unlockForm.getTemporaryPassword().equals(userDetails.getPassword())){
+            if (!unlockForm.getTemporaryPassword().equals(userDetails.getPassword())) {
                 return "Please check your temporary password again from your email";
             }
-            if(userDetails.getPassword().equals(unlockForm.getNewPassword())) {
-                userDetails.setPassword(unlockForm.getNewPassword());
-                userDetails.setAccountStatus("UNLOCKED");
-                userDetailsRepo.save(userDetails);
-            }
+            userDetails.setPassword(unlockForm.getConfirmPassword());
+            userDetails.setAccountStatus("UNLOCKED");
+            userDetailsRepo.save(userDetails);
             return "SUCCESS";
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return "Something went wrong while processing your request";
         }
