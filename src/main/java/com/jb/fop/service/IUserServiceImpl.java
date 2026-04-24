@@ -7,6 +7,7 @@ import com.jb.fop.entity.UserDetails;
 import com.jb.fop.repository.IUserDetailsRepo;
 import com.jb.fop.utility.EmailUtils;
 import com.jb.fop.utility.PasswordUtils;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,9 @@ public class IUserServiceImpl implements IUserService {
 
     @Autowired
     private EmailUtils emailUtils;
+
+    @Autowired
+    private HttpSession session;
 
     @Override
     public String Login(LoginForm loginForm) {
@@ -42,6 +46,7 @@ public class IUserServiceImpl implements IUserService {
         if (!userData.getPassword().equals(loginForm.getPassword())) {
             return "Invalid password, login with valid password only";
         }
+        session.setAttribute("userId", userData.getUserId());
         return "SUCCESS";
     }
 

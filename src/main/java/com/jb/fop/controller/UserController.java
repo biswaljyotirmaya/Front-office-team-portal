@@ -4,6 +4,7 @@ import com.jb.fop.dto.LoginForm;
 import com.jb.fop.dto.SignUpForm;
 import com.jb.fop.dto.UnlockForm;
 import com.jb.fop.service.IUserService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,6 +19,9 @@ public class UserController {
 
     @Autowired
     private IUserService userService;
+
+    @Autowired
+    private HttpSession session;
 
     @GetMapping("login")
     public String login(Model model) {
@@ -92,5 +96,12 @@ public class UserController {
             return "redirect:/login";
         }
         return "redirect:/forgotpass";
+    }
+
+    @GetMapping("logout")
+    public String logout(RedirectAttributes redirectAttributes) {
+        session.invalidate();
+        redirectAttributes.addFlashAttribute("success", "Logout Successful");
+        return "redirect:/";
     }
 }

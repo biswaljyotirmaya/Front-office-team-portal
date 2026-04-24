@@ -26,12 +26,36 @@
         footer {
             background-color: #f8f9fa;
         }
+
+        #alertBox {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-weight: bold;
+            z-index: 9999;
+        }
+
+        .alert-success {
+            background: #4CAF50;
+        }
+
+        .alert-error {
+            background: #f44336;
+        }
+
     </style>
 </head>
 
 <body>
-
-<!-- 🔹 Navbar -->
+<div id="alertBox"
+     th:if="${success != null or error != null}"
+     th:text="${success != null ? success : error}"
+     th:classappend="${success != null} ? 'alert-success' : 'alert-error'">
+</div>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
     <div class="container">
         <a class="navbar-brand d-flex align-items-center" href="/">
@@ -53,7 +77,6 @@
     </div>
 </nav>
 
-<!-- 🔹 Carousel -->
 <div id="carouselExample" class="carousel slide">
     <div class="carousel-inner">
         <div class="carousel-item active">
@@ -75,7 +98,6 @@
     </button>
 </div>
 
-<!-- 🔹 Courses Section -->
 <section class="container my-5">
     <h2 class="text-center mb-4">Our Courses</h2>
 
@@ -101,13 +123,20 @@
     </div>
 </section>
 
-<!-- 🔹 Footer -->
 <footer class="text-center py-3 border-top">
     <p class="mb-0">© 2026 Naresh IT | All Rights Reserved</p>
 </footer>
 
-<!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
-
+<script>
+    setTimeout(function () {
+        let alertBox = document.getElementById("alertBox");
+        if (alertBox) {
+            alertBox.style.transition = "opacity 0.5s";
+            alertBox.style.opacity = "0";
+            setTimeout(() => alertBox.remove(), 500);
+        }
+    }, 2500);
+</script>
 </body>
 </html>
