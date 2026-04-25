@@ -92,7 +92,7 @@
             <small class="text-muted">Manage student inquiries efficiently</small>
         </div>
 
-        <a href="/inquiry" class="btn btn-gradient">
+        <a href="/addinquiry" class="btn btn-gradient">
             <i class="bi bi-plus-lg"></i> Add Inquiry
         </a>
     </div>
@@ -102,7 +102,7 @@
         <h4>No inquiries found</h4>
         <p>Start by adding your first inquiry</p>
 
-        <a href="/inquiry" class="btn btn-gradient mt-3">
+        <a href="/addinquiry" class="btn btn-gradient mt-3">
             + Add Inquiry
         </a>
     </div>
@@ -129,7 +129,6 @@
                     <td th:text="${inq.contactNumber}"></td>
                     <td th:text="${inq.course}"></td>
 
-                    <!-- 🔥 Status Badge -->
                     <td>
                         <span th:text="${inq.enquiryStatus}"
                               th:classappend="

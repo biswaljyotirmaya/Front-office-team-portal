@@ -12,11 +12,13 @@ public interface IInquiryService {
 
     public List<String> getInquiryStatus();
 
-    public DashboardResponse getDashboard();
+    public DashboardResponse getDashboard(Integer userId);
 
     public String getInquiry(InquiryForm inquiryForm);
 
     public List<InquiryForm> getInquiryList(Integer userId, InquirySearchCriteria inquirySearchCriteria);
 
     public InquiryForm getInquiryById(Integer inquiryId);
+
+    public String addInquiry(InquiryForm inquiryForm);
 }

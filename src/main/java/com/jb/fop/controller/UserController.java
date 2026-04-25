@@ -1,8 +1,10 @@
 package com.jb.fop.controller;
 
+import com.jb.fop.dto.InquiryForm;
 import com.jb.fop.dto.LoginForm;
 import com.jb.fop.dto.SignUpForm;
 import com.jb.fop.dto.UnlockForm;
+import com.jb.fop.service.IInquiryService;
 import com.jb.fop.service.IUserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,9 @@ public class UserController {
     @Autowired
     private HttpSession session;
 
+    @Autowired
+    private IInquiryService inquiryService;
+
     @GetMapping("login")
     public String login(Model model) {
         model.addAttribute("login", new LoginForm());
@@ -35,9 +40,10 @@ public class UserController {
         if (!"SUCCESS".equals(res.toUpperCase())) {
             redirectAttributes.addFlashAttribute("error", res);
             return "redirect:/login";
-        }else{
+        } else {
             redirectAttributes.addFlashAttribute("success", "Login Success, Welcome back!");
         }
+        session.setAttribute("userID", session.getAttribute("userId"));
         return "redirect:/dashboard";
     }
 

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -20,37 +20,39 @@
 <div class="d-flex justify-content-center align-items-center vh-100">
     <div class="auth-card d-flex shadow" style="width:900px">
 
-        <!-- LEFT FORM -->
         <div class="p-5 bg-white w-50">
             <h3>NareshIT</h3>
             <p>Add Student Enquiry</p>
 
-            <form action="/inquiry" method="post">
+            <form th:action="@{/addinquiry}" th:method="post" th:object="${inquiry}">
 
-                <input type="text" name="studentName" class="form-control mb-3" placeholder="Student Name" required>
+                <input type="text" th:field="*{studentName}" class="form-control mb-3" placeholder="Student Name" required>
 
-                <input type="text" name="contactNumber" class="form-control mb-3" placeholder="Contact Number" required>
+                <input type="text" th:field="*{studentPhoneNumber}" class="form-control mb-3" placeholder="Contact Number" required>
 
                 <label class="form-label">Class Mode</label>
-                <select name="classMode" class="form-select mb-3" required>
+                <select th:field="*{classMode}" class="form-select mb-3" required>
                     <option value="">-Select-</option>
-                    <option>Online</option>
-                    <option>Offline</option>
+                    <option th:value="online">Online</option>
+                    <option th:value="offline">Offline</option>
                 </select>
 
                 <label class="form-label">Course</label>
-                <select name="course" class="form-select mb-3" required>
-                    <option>Java Fullstack</option>
-                    <option>Python Fullstack</option>
-                    <option>DevOps</option>
+                <select th:field="*{courseName}" class="form-select mb-3" required>
+                    <option value="">-- Select Course --</option>
+                    <option th:each="s : ${courses}"
+                            th:value="${s.coursesName}"
+                            th:text="${s.coursesName}">
+                    </option>
                 </select>
 
                 <label class="form-label">Enquiry Status</label>
-                <select name="enquiryStatus" class="form-select mb-3" required>
-                    <option>New</option>
-                    <option>In Progress</option>
-                    <option>Enrolled</option>
-                    <option>Closed</option>
+                <select th:field="*{inquiryStatus}" class="form-select mb-3" required>
+                    <option value="">-- Select Status --</option>
+                    <option th:each="s : ${statuses}"
+                            th:value="${s.statusName}"
+                            th:text="${s.statusName}">
+                    </option>
                 </select>
 
                 <button class="btn btn-danger w-100">Add Inquiry</button>
@@ -61,7 +63,6 @@
             </p>
         </div>
 
-        <!-- RIGHT PANEL -->
         <div class="text-white d-flex align-items-center justify-content-center w-50"
              style="background: linear-gradient(135deg,#ff6a00,#ee0979)">
             <div class="text-center p-4">

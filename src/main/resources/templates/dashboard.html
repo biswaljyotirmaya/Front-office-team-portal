@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Dashboard</title>
 
@@ -83,7 +83,7 @@
 
     <div class="container">
 
-        <a class="navbar-brand d-flex align-items-center" href="/">
+        <a class="navbar-brand d-flex align-items-center" th:href="@{/dashboard}">
             <img src="/images/naresh-it-logo.png" height="40" class="me-2">
         </a>
 
@@ -116,38 +116,29 @@
         <p class="text-muted">Here’s an overview of your student inquiries</p>
     </div>
 
-    <div class="row text-center g-4">
+    <div class="row text-center g-3">
 
-        <div class="col-md-3">
+        <div class="col-md-4">
             <div class="card shadow p-4">
                 <div class="icon-box text-primary"><i class="bi bi-people"></i></div>
                 <h6>Total</h6>
-                <h2 th:text="${total}">0</h2>
+                <h2 th:text="${inquiry != null ? inquiry.totalInquiryCount : 0}"></h2>
             </div>
         </div>
 
-        <div class="col-md-3">
+        <div class="col-md-4">
             <div class="card shadow p-4">
                 <div class="icon-box text-secondary"><i class="bi bi-hourglass"></i></div>
-                <h6>New</h6>
-                <h2 th:text="${newCount}">0</h2>
+                <h6>Enrolled</h6>
+                <h2 th:text="${inquiry != null ? inquiry.enrolledCount : 0}"></h2>
             </div>
         </div>
 
-        <div class="col-md-3">
+        <div class="col-md-4">
             <div class="card shadow p-4">
                 <div class="icon-box text-success"><i class="bi bi-check-circle"></i></div>
-                <h6>Enrolled</h6>
-                <h2 th:text="${enrolled}">0</h2>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="card shadow p-4">
-                <div class="icon-box text-danger"><i class="bi bi-x-circle"></i></div>
-                <h6>Closed</h6>
-                <h2 th:text="${closed}">0</h2>
-            </div>
+                <h6>Ghost</h6>
+                <h2 th:text="${inquiry != null ? inquiry.lostCount : 0}"></h2>
         </div>
 
     </div>

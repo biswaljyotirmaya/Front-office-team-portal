@@ -18,5 +18,5 @@ public class UserDetails {
     private String accountStatus;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "user")
-    private List<StudentInquiry> inquiries  ;
+    private List<InquiryDetails> inquiries  ;
 }
