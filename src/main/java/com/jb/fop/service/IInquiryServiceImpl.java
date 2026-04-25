@@ -10,9 +10,12 @@ import com.jb.fop.repository.InquiryRepo;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -75,8 +78,36 @@ public class IInquiryServiceImpl implements IInquiryService {
     }
 
     @Override
-    public List<InquiryForm> getInquiryList(Integer userId, InquirySearchCriteria inquirySearchCriteria) {
-        return List.of();
+    public List<InquiryForm> getInquiryList(Integer userId, String course, String status, String mode) {
+        InquiryDetails inquiryDetails = new InquiryDetails();
+
+        if (course != null && !course.isBlank()) {
+            inquiryDetails.setCourseName(course);
+        }
+        if (status != null && !status.isBlank()) {
+            inquiryDetails.setClassMode(status);
+        }
+
+        if (mode != null && !mode.isBlank()) {
+            inquiryDetails.setInquiryStatus(mode);
+        }
+
+        UserDetails user = userDetailsRepo.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+
+        inquiryDetails.setUser(user);
+
+        ExampleMatcher matcher = ExampleMatcher.matching().withIgnoreNullValues().withIgnoreCase();
+
+        Example<InquiryDetails> example = Example.of(inquiryDetails, matcher);
+
+        List<InquiryDetails> filteredData = inquiryRepo.findAll(example);
+        List<InquiryForm> inquiryFormList = new ArrayList<>();
+        for (InquiryDetails inquiryDetail : filteredData) {
+            InquiryForm inquiryForm = new InquiryForm();
+            BeanUtils.copyProperties(inquiryDetail, inquiryForm);
+            inquiryFormList.add(inquiryForm);
+        }
+        return inquiryFormList;
     }
 
     @Override

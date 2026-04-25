@@ -16,7 +16,7 @@ public interface IInquiryService {
 
     public String getInquiry(InquiryForm inquiryForm);
 
-    public List<InquiryForm> getInquiryList(Integer userId, InquirySearchCriteria inquirySearchCriteria);
+    public List<InquiryForm> getInquiryList(Integer userId, String course, String status, String mode);
 
     public InquiryForm getInquiryById(Integer inquiryId);
 
