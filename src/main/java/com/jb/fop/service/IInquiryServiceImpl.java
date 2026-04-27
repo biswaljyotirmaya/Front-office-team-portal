@@ -84,12 +84,13 @@ public class IInquiryServiceImpl implements IInquiryService {
         if (course != null && !course.isBlank()) {
             inquiryDetails.setCourseName(course);
         }
+
         if (status != null && !status.isBlank()) {
-            inquiryDetails.setClassMode(status);
+            inquiryDetails.setInquiryStatus(status);
         }
 
         if (mode != null && !mode.isBlank()) {
-            inquiryDetails.setInquiryStatus(mode);
+            inquiryDetails.setClassMode(mode);
         }
 
         UserDetails user = userDetailsRepo.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
@@ -112,7 +113,13 @@ public class IInquiryServiceImpl implements IInquiryService {
 
     @Override
     public InquiryForm getInquiryById(Integer inquiryId) {
-        return null;
+
+        InquiryDetails entity = inquiryRepo.findById(inquiryId).orElseThrow(() -> new RuntimeException("Inquiry not found"));
+
+        InquiryForm form = new InquiryForm();
+        BeanUtils.copyProperties(entity, form);
+
+        return form;
     }
 
     @Override
@@ -120,9 +127,6 @@ public class IInquiryServiceImpl implements IInquiryService {
         System.out.println("inquiryForm = " + inquiryForm);
         InquiryDetails inquiryDetails = new InquiryDetails();
         BeanUtils.copyProperties(inquiryForm, inquiryDetails);
-        if (inquiryForm.getStudentPhoneNumber() != null) {
-            inquiryDetails.setPhoneNumber(Long.parseLong(inquiryForm.getStudentPhoneNumber()));
-        }
 
         Object userObj = httpSession.getAttribute("userID");
         if (userObj == null) {
@@ -138,5 +142,35 @@ public class IInquiryServiceImpl implements IInquiryService {
 
         inquiryRepo.save(inquiryDetails);
         return "SUCCESS: Inquiry added successfully";
+    }
+
+    @Override
+    public String editInquiry(Integer id, InquiryForm form) {
+
+        Optional<InquiryDetails> optional = inquiryRepo.findById(id);
+
+        if (optional.isEmpty()) {
+            return "FAIL: Inquiry not found";
+        }
+
+        InquiryDetails entity = optional.get();
+        entity.setStudentName(form.getStudentName());
+        entity.setPhoneNumber(form.getPhoneNumber());
+        entity.setClassMode(form.getClassMode());
+        entity.setCourseName(form.getCourseName());
+        entity.setInquiryStatus(form.getInquiryStatus());
+
+        inquiryRepo.save(entity);
+
+        return "SUCCESS";
+    }
+
+    public String deleteInquiry(Integer id) {
+        Optional<InquiryDetails> optional = inquiryRepo.findById(id);
+        if (optional.isEmpty()) {
+            return "ERROR: Inquiry not found";
+        }
+        inquiryRepo.deleteById(id);
+        return "SUCCESS: Inquiry deleted successfully";
     }
 }

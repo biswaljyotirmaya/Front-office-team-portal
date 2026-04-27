@@ -24,17 +24,24 @@
             <h3>NareshIT</h3>
             <p>Add Student Enquiry</p>
 
-            <form th:action="@{/addinquiry}" th:method="post" th:object="${inquiry}">
+            <form th:object="${inquiry}"
+                  th:action="@{/addinquiry}"
+                  th:attr="action=${inquiry.inquiryId} != null ? '/edit/' + ${inquiry.inquiryId} : null"
+                  method="post">
 
-                <input type="text" th:field="*{studentName}" class="form-control mb-3" placeholder="Student Name" required>
+                <input type="hidden" th:field="*{inquiryId}">
 
-                <input type="text" th:field="*{studentPhoneNumber}" class="form-control mb-3" placeholder="Contact Number" required>
+                <input type="text" th:field="*{studentName}"
+                       class="form-control mb-3" placeholder="Student Name" required>
+
+                <input type="text" th:field="*{phoneNumber}"
+                       class="form-control mb-3" placeholder="Contact Number" required>
 
                 <label class="form-label">Class Mode</label>
                 <select th:field="*{classMode}" class="form-select mb-3" required>
                     <option value="">-Select-</option>
-                    <option th:value="online">Online</option>
-                    <option th:value="offline">Offline</option>
+                    <option value="online">Online</option>
+                    <option value="offline">Offline</option>
                 </select>
 
                 <label class="form-label">Course</label>
@@ -55,9 +62,12 @@
                     </option>
                 </select>
 
-                <button class="btn btn-danger w-100">Add Inquiry</button>
-            </form>
+                <!-- 🔥 Dynamic button text -->
+                <button class="btn btn-danger w-100"
+                        th:text="${inquiry.inquiryId} != null ? 'Update Inquiry' : 'Add Inquiry'">
+                </button>
 
+            </form>
             <p class="text-center mt-3">
                 <a href="/" class="btn btn-outline-secondary btn-sm">Back to Home</a>
             </p>

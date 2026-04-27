@@ -6,5 +6,5 @@ import lombok.Data;
 public class SignUpForm {
     private String userName;
     private String email;
-    private Long phoneNumber;
+    private String phoneNumber;
 }

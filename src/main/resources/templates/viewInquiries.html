@@ -47,6 +47,19 @@
             padding: 6px 10px;
             border-radius: 20px;
         }
+
+        .card {
+            border-radius: 12px;
+        }
+
+        .form-select {
+            border-radius: 8px;
+        }
+
+        label {
+            font-size: 0.9rem;
+            color: #555;
+        }
     </style>
 </head>
 
@@ -106,32 +119,48 @@
             + Add Inquiry
         </a>
     </div>
-    <div>
-        <select id="courseFilter"class="form-select" aria-label="Default select example">
-            <option selected>-Select-</option>
-            <option th:each="c :${courses}"
-                    th:value="${c.coursesName}"
-                    th:text="${c.coursesName}">
-            </option>
-        </select>
-        <select id="statusFilter" class="form-select" aria-label="Default select example">
-            <option selected>-Select-</option>
-            <option th:each="c :${statuses}"
-                    th:value="${c.statusName}"
-                    th:text="${c.statusName}">
-            </option>
-        </select>
-        <select id="modeFilter" class="form-select" aria-label="Default select example">
-            <option selected>-Select-</option>
-            <option th:value="online" th:text="Online"></option>
-            <option th:value="offline" th:text="Offline"></option>
-        </select>
-    </div>
 
     <div th:if="${!#lists.isEmpty(inquiries)}" class="card shadow">
+        <div class="card shadow-sm p-3 mb-4">
+            <div class="row g-3 align-items-center">
+                <div class="col-md-4">
+                    <label class="form-label fw-semibold">Course</label>
+                    <select id="courseFilter" class="form-select">
+                        <option selected value="">-- Select Course --</option>
+                        <option th:each="c : ${courses}"
+                                th:value="${c.coursesName}"
+                                th:text="${c.coursesName}">
+                        </option>
+                    </select>
+                </div>
+
+                <!-- Status Filter -->
+                <div class="col-md-4">
+                    <label class="form-label fw-semibold">Status</label>
+                    <select id="statusFilter" class="form-select">
+                        <option selected value="">-- Select Status --</option>
+                        <option th:each="c : ${statuses}"
+                                th:value="${c.statusName}"
+                                th:text="${c.statusName}">
+                        </option>
+                    </select>
+                </div>
+
+                <!-- Mode Filter -->
+                <div class="col-md-4">
+                    <label class="form-label fw-semibold">Mode</label>
+                    <select id="modeFilter" class="form-select">
+                        <option selected value="">-- Select Mode --</option>
+                        <option value="online">Online</option>
+                        <option value="offline">Offline</option>
+                    </select>
+                </div>
+
+            </div>
+        </div>
         <div class="card-body">
 
-            <table id="tableBody" class="table table-hover align-middle text-center">
+            <table class="table table-hover align-middle text-center">
                 <thead>
                 <tr>
                     <th>ID</th>
@@ -140,37 +169,35 @@
                     <th>Course</th>
                     <th>Mode</th>
                     <th>Status</th>
-                    <th>Status</th>
                     <th>Actions</th>
                 </tr>
                 </thead>
 
-                <tbody>
+                <tbody id="tableBody">
                 <tr th:each="inq : ${inquiries}">
                     <td th:text="${inq.inquiryId}"></td>
                     <td class="fw-semibold" th:text="${inq.studentName}"></td>
-                    <td th:text="${inq.studentPhoneNumber}"></td>
+                    <td th:text="${inq.phoneNumber}"></td>
                     <td th:text="${inq.courseName}"></td>
                     <td th:text="${inq.classMode}"></td>
                     <td th:text="${inq.inquiryStatus}"></td>
 
                     <td>
-                        <span th:text="${inq.enquiryStatus}"
+                        <span th:text="${inq.inquiryStatus}"
                               th:classappend="
-                                ${inq.enquiryStatus=='Enrolled'} ? 'badge bg-success' :
-                                (${inq.enquiryStatus=='New'} ? 'badge bg-secondary' :
-                                (${inq.enquiryStatus=='In Progress'} ? 'badge bg-warning text-dark' :
+                                ${inq.inquiryStatus=='Enrolled'} ? 'badge bg-success' :
+                                (${inq.inquiryStatus=='New'} ? 'badge bg-secondary' :
+                                (${inq.inquiryStatus=='In Progress'} ? 'badge bg-warning text-dark' :
                                 'badge bg-danger'))">
                         </span>
                     </td>
 
                     <td>
-                        <a th:href="@{/edit(inquiryId=${inq.inquiryId})}"
+                        <a th:href="@{/edit/{id}(id=${inq.inquiryId})}"
                            class="btn btn-warning btn-sm me-1">
                             <i class="bi bi-pencil"></i>
                         </a>
-
-                        <a th:href="@{/delete(inquiryId=${inq.inquiryId})}"
+                        <a th:href="@{/delete/{id}(id=${inq.inquiryId})}"
                            class="btn btn-danger btn-sm"
                            onclick="return confirm('Delete this inquiry?')">
                             <i class="bi bi-trash"></i>
@@ -186,6 +213,7 @@
 
 </div>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function () {
 
@@ -193,10 +221,14 @@
 
             let course = $("#courseFilter").val();
             let status = $("#statusFilter").val();
-            let mode   = $("#modeFilter").val();
+            let mode = $("#modeFilter").val();
+
+            course = course === "" ? null : course;
+            status = status === "" ? null : status;
+            mode = mode === "" ? null : mode;
 
             $.ajax({
-                url: "/inquiries",
+                url: "/inquiries/filter",
                 type: "GET",
                 data: {
                     course: course,
@@ -219,18 +251,19 @@
 
                     data.forEach(function (inq) {
                         let row = `
-                        <tr>
-                            <td>${inq.id}</td>
-                            <td>${inq.studentName}</td>
-                            <td>${inq.contactNumber}</td>
-                            <td>${inq.course}</td>
-                            <td>${inq.enquiryStatus}</td>
-                            <td>
-                                <a href="/edit?id=${inq.id}" class="btn btn-warning btn-sm">Edit</a>
-                                <a href="/delete?id=${inq.id}" class="btn btn-danger btn-sm">Delete</a>
-                            </td>
-                        </tr>
-                    `;
+<tr>
+    <td>${inq.inquiryId}</td>
+    <td>${inq.studentName}</td>
+    <td>${inq.phoneNumber}</td>
+    <td>${inq.courseName}</td>
+    <td>${inq.classMode}</td>
+    <td>${inq.inquiryStatus}</td>
+    <td>
+        <a href="/edit?inquiryId=${inq.inquiryId}" class="btn btn-warning btn-sm">Edit</a>
+        <a href="/delete?inquiryId=${inq.inquiryId}" class="btn btn-danger btn-sm">Delete</a>
+    </td>
+</tr>
+`;
                         tableBody.append(row);
                     });
                 },
@@ -239,11 +272,11 @@
                 }
             });
         }
+
         $("#courseFilter, #statusFilter, #modeFilter").change(fetchFilteredData);
 
     });
 </script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

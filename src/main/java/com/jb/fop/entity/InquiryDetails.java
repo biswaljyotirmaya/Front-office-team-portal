@@ -2,6 +2,8 @@ package com.jb.fop.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
 
@@ -14,12 +16,14 @@ public class InquiryDetails {
     private Integer inquiryId;
 
     private String studentName;
-    private Long phoneNumber;
+    private String phoneNumber;
     private String classMode;
     private String courseName;
     private String inquiryStatus;
 
+    @CreationTimestamp
     private LocalDate createdDate;
+    @UpdateTimestamp
     private LocalDate updatedDate;
 
     @ManyToOne(fetch = FetchType.LAZY)

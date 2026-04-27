@@ -14,7 +14,7 @@ public class UserDetails {
     private String userName;
     private String email;
     private String password;
-    private Long phoneNumber;
+    private String phoneNumber;
     private String accountStatus;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "user")

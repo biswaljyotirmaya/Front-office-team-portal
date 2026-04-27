@@ -21,4 +21,8 @@ public interface IInquiryService {
     public InquiryForm getInquiryById(Integer inquiryId);
 
     public String addInquiry(InquiryForm inquiryForm);
+
+    public String editInquiry(Integer id, InquiryForm inquiryForm);
+
+    public String deleteInquiry(Integer id);
 }
