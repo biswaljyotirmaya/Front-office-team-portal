@@ -1,10 +1,9 @@
 package com.jb.fop.controller;
 
-import com.jb.fop.dto.InquiryForm;
+import com.jb.fop.constant.Constants;
 import com.jb.fop.dto.LoginForm;
 import com.jb.fop.dto.SignUpForm;
 import com.jb.fop.dto.UnlockForm;
-import com.jb.fop.service.IInquiryService;
 import com.jb.fop.service.IUserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,14 +18,15 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 public class UserController {
 
-    @Autowired
-    private IUserService userService;
+    private final IUserService userService;
+
+    private final HttpSession session;
 
     @Autowired
-    private HttpSession session;
-
-    @Autowired
-    private IInquiryService inquiryService;
+    public UserController(IUserService userService, HttpSession session) {
+        this.userService = userService;
+        this.session = session;
+    }
 
     @GetMapping("login")
     public String login(Model model) {
@@ -37,11 +37,11 @@ public class UserController {
     @PostMapping("/login")
     public String handleLogin(@ModelAttribute("login") LoginForm loginForm, RedirectAttributes redirectAttributes) {
         String res = userService.Login(loginForm);
-        if (!"SUCCESS".equals(res.toUpperCase())) {
-            redirectAttributes.addFlashAttribute("error", res);
+        if (!Constants.CONST_SUCCESS.equalsIgnoreCase(res)) {
+            redirectAttributes.addFlashAttribute(Constants.ERROR, res);
             return "redirect:/login";
         } else {
-            redirectAttributes.addFlashAttribute("success", "Login Success, Welcome back!");
+            redirectAttributes.addFlashAttribute(Constants.SUCCESS, "Login Success, Welcome back!");
         }
         session.setAttribute("userID", session.getAttribute("userId"));
         return "redirect:/dashboard";
@@ -66,10 +66,10 @@ public class UserController {
         model.addAttribute("unlockForm", new UnlockForm());
         System.out.println("unlockForm = " + unlockForm);
         String result = userService.unLockAccount(unlockForm);
-        if (result.equals("SUCCESS")) {
-            model.addAttribute("success", "Your account has been unlocked,\nPlease login with your new credentials");
+        if (result.equals(Constants.CONST_SUCCESS)) {
+            model.addAttribute(Constants.SUCCESS, "Your account has been unlocked,\nPlease login with your new credentials");
         } else {
-            model.addAttribute("error", result);
+            model.addAttribute(Constants.ERROR, result);
         }
         return "unlock";
     }
@@ -77,11 +77,11 @@ public class UserController {
     @PostMapping("/signup")
     public String handleSignup(@ModelAttribute("user") SignUpForm signUpForm, Model model) {
         String status = userService.SignUp(signUpForm);
-        if ("SUCCESS".equals(status)) {
-            model.addAttribute("success", "Signup Successful, please check your email");
+        if (Constants.CONST_SUCCESS.equals(status)) {
+            model.addAttribute(Constants.SUCCESS, "Signup Successful, please check your email");
             model.addAttribute("user", signUpForm);
         } else {
-            model.addAttribute("error", status);
+            model.addAttribute(Constants.ERROR, status);
             model.addAttribute("user", signUpForm);
         }
         return "signUp";
@@ -96,9 +96,9 @@ public class UserController {
     public String handleForgotPassword(@RequestParam("email") String email, RedirectAttributes redirectAttributes) {
         String msg = userService.forgotPassword(email);
         if (msg.startsWith("ERROR:")) {
-            redirectAttributes.addFlashAttribute("error", msg.substring(6));
+            redirectAttributes.addFlashAttribute(Constants.ERROR, msg.substring(6));
         } else {
-            redirectAttributes.addFlashAttribute("success", "Password sent successfully. Please check your email and log in.");
+            redirectAttributes.addFlashAttribute(Constants.SUCCESS, "Password sent successfully. Please check your email and log in.");
             return "redirect:/login";
         }
         return "redirect:/forgotpass";
@@ -107,7 +107,7 @@ public class UserController {
     @GetMapping("logout")
     public String logout(RedirectAttributes redirectAttributes) {
         session.invalidate();
-        redirectAttributes.addFlashAttribute("success", "Logout Successful");
+        redirectAttributes.addFlashAttribute(Constants.SUCCESS, "Logout Successful");
         return "redirect:/";
     }
 }

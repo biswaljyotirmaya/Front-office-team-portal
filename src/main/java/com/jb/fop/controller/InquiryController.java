@@ -1,9 +1,8 @@
 package com.jb.fop.controller;
 
+import com.jb.fop.constant.Constants;
 import com.jb.fop.dto.DashboardResponse;
 import com.jb.fop.dto.InquiryForm;
-import com.jb.fop.dto.InquirySearchCriteria;
-import com.jb.fop.entity.InquiryDetails;
 import com.jb.fop.repository.ICoursesRepo;
 import com.jb.fop.repository.IStatusRepo;
 import com.jb.fop.service.IInquiryService;
@@ -19,44 +18,48 @@ import java.util.List;
 @Controller
 public class InquiryController {
 
-    @Autowired
-    private HttpSession session;
+    private final HttpSession session;
+
+    private final IInquiryService inquiryService;
+
+    private final ICoursesRepo coursesRepo;
+
+    private final IStatusRepo statusRepo;
 
     @Autowired
-    private IInquiryService inquiryService;
-
-    @Autowired
-    private ICoursesRepo coursesRepo;
-
-    @Autowired
-    private IStatusRepo statusRepo;
+    public InquiryController(IInquiryService inquiryService,ICoursesRepo coursesRepo, IStatusRepo statusRepo, HttpSession session) {
+        this.inquiryService = inquiryService;
+        this.coursesRepo = coursesRepo;
+        this.statusRepo = statusRepo;
+        this.session = session;
+    }
 
     @GetMapping("/dashboard")
     public String dashboard(Model model) {
-        Object userObj = session.getAttribute("userID");
+        Object userObj = session.getAttribute(Constants.USER_ID);
 
         if (userObj == null) {
             return "redirect:/login";
         }
 
         Integer userID = (Integer) userObj;
-        model.addAttribute("userId", userID);
+        model.addAttribute(Constants.USER_ID, userID);
         DashboardResponse res = inquiryService.getDashboard(userID);
-        model.addAttribute("inquiry", res);
+        model.addAttribute(Constants.INQUIRY, res);
         return "dashboard";
     }
 
     @GetMapping("/addinquiry")
     public String addInquiry(Model model) {
-        model.addAttribute("inquiry", new InquiryForm());
-        model.addAttribute("userId", session.getAttribute("userID"));
-        model.addAttribute("courses", coursesRepo.findAll());
-        model.addAttribute("statuses", statusRepo.findAll());
+        model.addAttribute(Constants.INQUIRY, new InquiryForm());
+        model.addAttribute(Constants.USER_ID, session.getAttribute(Constants.USER_ID));
+        model.addAttribute(Constants.COURSES, coursesRepo.findAll());
+        model.addAttribute(Constants.STATUSES, statusRepo.findAll());
         return "addInquiry";
     }
 
     @PostMapping("/addinquiry")
-    public String handleAddInquiry(@ModelAttribute("inquiry") InquiryForm inquiryForm, RedirectAttributes redirectAttributes) {
+    public String handleAddInquiry(@ModelAttribute(Constants.INQUIRY) InquiryForm inquiryForm, RedirectAttributes redirectAttributes) {
 
         String res = inquiryService.addInquiry(inquiryForm);
 
@@ -71,11 +74,11 @@ public class InquiryController {
 
     @GetMapping("/inquiries")
     public String viewInquiries(@RequestParam(required = false) String course, @RequestParam(required = false) String status, @RequestParam(required = false) String mode, Model model) {
-        Integer userID = Integer.parseInt(session.getAttribute("userID").toString());
+        Integer userID = Integer.parseInt(session.getAttribute(Constants.USER_ID).toString());
         List<InquiryForm> inquiries = inquiryService.getInquiryList(userID, course, status, mode);
         model.addAttribute("inquiries", inquiries);
-        model.addAttribute("courses", coursesRepo.findAll());
-        model.addAttribute("statuses", statusRepo.findAll());
+        model.addAttribute(Constants.COURSES, coursesRepo.findAll());
+        model.addAttribute(Constants.STATUSES, statusRepo.findAll());
         System.out.println("inquiries at without ajax: " + inquiries);
         return "viewInquiries";
     }
@@ -83,7 +86,7 @@ public class InquiryController {
     @GetMapping("/inquiries/filter")
     @ResponseBody
     public List<InquiryForm> filterInquiries(@RequestParam(required = false) String course, @RequestParam(required = false) String status, @RequestParam(required = false) String mode) {
-        Integer userID = Integer.parseInt(session.getAttribute("userID").toString());
+        Integer userID = Integer.parseInt(session.getAttribute(Constants.USER_ID).toString());
         List<InquiryForm> inquiries = inquiryService.getInquiryList(userID, course, status, mode);
         System.out.println("inquiries at with ajax: " + inquiries);
         return inquiries;
@@ -92,14 +95,14 @@ public class InquiryController {
     @GetMapping("/edit/{id}")
     public String editInquiry(@PathVariable Integer id, Model model) {
         InquiryForm form = inquiryService.getInquiryById(id);
-        model.addAttribute("inquiry", form);
-        model.addAttribute("courses", coursesRepo.findAll());
-        model.addAttribute("statuses", statusRepo.findAll());
+        model.addAttribute(Constants.INQUIRY, form);
+        model.addAttribute(Constants.COURSES, coursesRepo.findAll());
+        model.addAttribute(Constants.STATUSES, statusRepo.findAll());
         return "addInquiry";
     }
 
     @PostMapping("/edit/{id}")
-    public String handleEditInquiry(@PathVariable Integer id, @ModelAttribute("inquiry") InquiryForm form, RedirectAttributes redirectAttributes) {
+    public String handleEditInquiry(@PathVariable Integer id, @ModelAttribute(Constants.INQUIRY) InquiryForm form, RedirectAttributes redirectAttributes) {
 
         System.out.println("EDIT CALLED for ID: " + id);
 

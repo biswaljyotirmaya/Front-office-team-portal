@@ -1,12 +1,9 @@
 package com.jb.fop.runner;
 
 import com.jb.fop.entity.Courses;
-import com.jb.fop.entity.InquiryDetails;
 import com.jb.fop.entity.Status;
 import com.jb.fop.repository.ICoursesRepo;
 import com.jb.fop.repository.IStatusRepo;
-import com.jb.fop.repository.InquiryRepo;
-import org.hibernate.annotations.AttributeAccessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -17,13 +14,15 @@ import java.util.Arrays;
 @Component
 public class DataLoader implements ApplicationRunner {
 
-    @Autowired
-    private ICoursesRepo coursesRepo;
+    private final ICoursesRepo coursesRepo;
+
+    private final IStatusRepo iStatusRepo;
 
     @Autowired
-    private InquiryRepo inquiryRepo;
-    @Autowired
-    private IStatusRepo iStatusRepo;
+    public DataLoader(ICoursesRepo coursesRepo, IStatusRepo iStatusRepo) {
+        this.coursesRepo = coursesRepo;
+        this.iStatusRepo = iStatusRepo;
+    }
 
     @Override
     public void run(ApplicationArguments args) throws Exception {

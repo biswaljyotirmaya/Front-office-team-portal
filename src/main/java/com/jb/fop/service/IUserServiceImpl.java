@@ -1,5 +1,6 @@
 package com.jb.fop.service;
 
+import com.jb.fop.constant.Constants;
 import com.jb.fop.dto.LoginForm;
 import com.jb.fop.dto.SignUpForm;
 import com.jb.fop.dto.UnlockForm;
@@ -15,17 +16,22 @@ import org.springframework.stereotype.Service;
 @Service
 public class IUserServiceImpl implements IUserService {
 
-    @Autowired
-    private PasswordUtils passwordUtils;
+
+    private final IUserDetailsRepo userDetailsRepo;
+
+    private final EmailUtils emailUtils;
+
+    private final PasswordUtils passwordUtils;
+
+    private final HttpSession session;
 
     @Autowired
-    private IUserDetailsRepo userDetailsRepo;
-
-    @Autowired
-    private EmailUtils emailUtils;
-
-    @Autowired
-    private HttpSession session;
+    public IUserServiceImpl(PasswordUtils passwordUtils, IUserDetailsRepo userDetailsRepo, EmailUtils emailUtils, HttpSession session) {
+        this.userDetailsRepo = userDetailsRepo;
+        this.emailUtils = emailUtils;
+        this.passwordUtils = passwordUtils;
+        this.session = session;
+    }
 
     @Override
     public String Login(LoginForm loginForm) {
@@ -47,7 +53,7 @@ public class IUserServiceImpl implements IUserService {
             return "Invalid password, login with valid password only";
         }
         session.setAttribute("userId", userData.getUserId());
-        return "SUCCESS";
+        return Constants.CONST_SUCCESS;
     }
 
     @Override
@@ -75,7 +81,7 @@ public class IUserServiceImpl implements IUserService {
             String subject = "Welcome! Set Your Password";
             String body = emailUtils.buildEmailBody(name, pass, sendTo);
             emailUtils.sendEmail(sendTo, subject, body);
-            return "SUCCESS";
+            return Constants.CONST_SUCCESS;
         } catch (Exception e) {
             e.printStackTrace();
             return "Something went wrong while processing your request";
@@ -99,7 +105,7 @@ public class IUserServiceImpl implements IUserService {
             userDetails.setPassword(unlockForm.getConfirmPassword());
             userDetails.setAccountStatus("UNLOCKED");
             userDetailsRepo.save(userDetails);
-            return "SUCCESS";
+            return Constants.CONST_SUCCESS;
         } catch (Exception e) {
             e.printStackTrace();
             return "Something went wrong while processing your request";
@@ -123,6 +129,6 @@ public class IUserServiceImpl implements IUserService {
         String body = emailUtils.buildForgotPasswordEmail(name, userData.getPassword());
         emailUtils.sendEmail(email, subject, body);
 
-        return "SUCCESS";
+        return Constants.CONST_SUCCESS;
     }
 }

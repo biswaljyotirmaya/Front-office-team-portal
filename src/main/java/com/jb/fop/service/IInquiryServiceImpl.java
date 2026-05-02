@@ -2,7 +2,6 @@ package com.jb.fop.service;
 
 import com.jb.fop.dto.DashboardResponse;
 import com.jb.fop.dto.InquiryForm;
-import com.jb.fop.dto.InquirySearchCriteria;
 import com.jb.fop.entity.InquiryDetails;
 import com.jb.fop.entity.UserDetails;
 import com.jb.fop.repository.IUserDetailsRepo;
@@ -22,13 +21,16 @@ import java.util.Optional;
 @Service
 public class IInquiryServiceImpl implements IInquiryService {
 
-    @Autowired
-    private IUserDetailsRepo userDetailsRepo;
+    private final IUserDetailsRepo userDetailsRepo;
+    private final InquiryRepo inquiryRepo;
+    private final HttpSession httpSession;
 
     @Autowired
-    private HttpSession httpSession;
-    @Autowired
-    private InquiryRepo inquiryRepo;
+    public IInquiryServiceImpl(IUserDetailsRepo userDetailsRepo, InquiryRepo inquiryRepo, HttpSession httpSession) {
+        this.userDetailsRepo = userDetailsRepo;
+        this.inquiryRepo = inquiryRepo;
+        this.httpSession = httpSession;
+    }
 
     @Override
     public List<String> getCoursesName() {

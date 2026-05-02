@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 public class PasswordUtils {
     public String generatePassword() {
         String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%&*()-_";
-        String pwd = RandomStringUtils.random(10, characters);
-        return pwd;
+        return RandomStringUtils.random (10, characters);
     }
 }
